@@ -1,0 +1,199 @@
+---
+title: "Class10: Structural Bioinformatics 1"
+author: "Catherina Santoso (PID: A18552334)"
+format: html
+---
+
+## PDB statistics
+The Protein Data Bank (PDB) is the main repository of biomolecular structures. Let's see what it contains:
+
+```{r}
+stats <- read.csv("Data Export Summary.csv")
+stats
+```
+
+```{r}
+stats$X.ray
+```
+
+```{r}
+sum(stats$Neutron)
+```
+
+The comma in these numbers leads to the numbers here being read as character.
+```{r}
+c(100, 10, "nina")
+```
+
+```{r}
+library(readr)
+stats <- read_csv("Data Export Summary.csv")
+stats
+```
+
+
+```{r}
+sum(c(stats$`X-ray`, stats$`EM`))
+
+```
+
+>Q1: What percentage of structures in the PDB are solved by X-Ray and Electron Microscopy.
+
+```{r}
+n.xray <- sum(stats$`X-ray`)
+#n.em <- 
+n.total <-sum(stats$Total)
+n.xray/n.total
+```
+
+
+>Q2: What proportion of structures in the PDB are protein?
+
+```{r}
+n.protein <- stats[1, "Total"]
+p_protein <- n.protein/n.total
+p_protein
+```
+
+
+
+>Q3: SKIP...
+
+## Visualizing the HIV-1 protease structure
+molstar.org/viewer
+
+![HIV-Pr with surface dispaly showing ligand binding](1HSG.png)
+
+A new clean image showing the catalytic ASP25 amino acids in both chains of the HIV-PR dimer along with the inhibitor and all important active site water.
+
+![-](1HSG_2.png)
+
+
+## Bio3D package for structural bioinformatics
+
+```{r}
+library(bio3d)
+
+pdb <- read.pdb("1hsg")
+pdb
+```
+
+```{r}
+head(pdb$atom)
+```
+
+```{r}
+#library(bio3dview)
+#view.pdb(pdb)
+```
+
+
+## Predicting functional motions of a single structure
+```{r}
+adk <- read.pdb("6s36")
+adk
+```
+
+```{r}
+m <- nma(adk)
+plot(m)
+```
+
+Write out our results as a wee trajectory/movie of predicted motions:
+
+```{r}
+mktrj(m, file = "adk_m7.pdb")
+```
+
+
+
+## Comparative analysis with PCA
+
+First step find an ADK sequence:
+
+```{r}
+library(bio3d)
+id <-  "1ake_A" ## Change this to run a different analysis 
+aa <- get.seq( id )
+```
+
+
+```{r}
+aa
+```
+
+
+```{r}
+blast <- blast.pdb(aa)
+hits <- plot(blast)
+```
+
+```{r}
+blast$hit.tbl
+```
+
+```{r}
+head(blast$hit.tbl)
+```
+The "top hits" are in the `hits` objects. Now we can download these to our computer. Put these in a sub-folder.
+
+```{r}
+# Download related PDB files 
+files <- get.pdb(hits$pdb.id, path = "pdbs", split = TRUE, gzip = TRUE)
+```
+
+These look like a hot mess 
+
+![](9R6U-9R71-1AKE-1E4V-1E4Y-3HPR-3X2S-4K46-4NP6-4X8H-4X8M-5EJE-6HAM-6HAP-6RZE-6S36-8BQF-8PVW-8Q2B-8RJ9.png)
+
+Next we will use the `pdbaln()` function to align and also optionally fit (i.e. suppose) the identified the PDB structures.
+
+This requires a BioConductor package called "msa" that we need to install. First we install BiocManager. Then we use `BiocManager::install("msa")`
+
+```{r}
+# Align related PDBs 
+pdbs <- pdbaln(files, fit = TRUE, exefile = "msa")
+```
+
+
+Have a week peak at this new "alignment object" `pdbs`
+```{r}
+pdbs
+```
+
+We could view these in R with **bio3dview** `view.pdbs()` function. 
+```{r}
+library(bio3dview)
+view.pdbs(pdbs, colorScheme = "residue")
+
+```
+
+## PCA
+
+We can run PCA on our `pdbs` object using the `pca()` function from **bio3d**:
+```{r}
+pc.xray <- pca(pdbs)
+plot(pc.xray)
+```
+
+```{r}
+plot(pc.xray, 1:2)
+```
+
+We can make a visualization of the major confrontational difference (i.e. large scale structure change) captured by our PCA analysis with the `mktrj()` function. 
+
+```{r}
+pc1 <- mktrj(pc.xray, file = "pca.pdb")
+```
+
+Let's see in Mol-star:
+```{r}
+view.pca
+```
+
+> What is the total number of entries in the PDB
+
+```{r}
+n.sums["total"]
+```
+

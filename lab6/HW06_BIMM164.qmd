@@ -1,0 +1,57 @@
+---
+title: "HW06_BIMM_Santoso"
+name: Catherina Santoso
+format: pdf
+---
+
+Section 1: Improving analysis code by writing functions
+```{r}
+# (A. Can you improve this analysis code?
+df <- data.frame(a=1:10, b=seq(200,400,length=10),c=11:20,d=NA)
+df$a <- (df$a - min(df$a)) / (max(df$a) - min(df$a))
+df$b <- (df$b - min(df$a)) / (max(df$b) - min(df$b))
+df$c <- (df$c - min(df$c)) / (max(df$c) - min(df$c))
+df$d <- (df$d - min(df$d)) / (max(df$a) - min(df$d)) 
+df
+```
+
+```{r}
+library(bio3d)
+# Function: plot_drug_binding()
+# Inputs:
+#   pdb_id = which protein to plot (must be "4AKE", "1AKE", or "1E4Y")
+#   chain  = which chain (default "A")
+#   elety  = which atom type (default "CA")
+#
+# What it does:
+#   Reads a PDB, trims to chain A + CA atoms, extracts B-factors,
+#   and makes ONE plot showing flexibility (B-factors).
+#
+# Output:
+plot_drug_binding <- function(pdb_id, chain = "A", elety = "CA") {
+
+  allowed <- c("4AKE", "1AKE", "1E4Y")
+  pdb_id <- toupper(pdb_id)
+
+  if (!pdb_id %in% allowed) {
+    stop("pdb_id must be one of: 4AKE, 1AKE, 1E4Y")
+  }
+
+  pdb <- read.pdb(pdb_id)
+  pdb_trim <- trim.pdb(pdb, chain = chain, elety = elety)
+  b_factors <- pdb_trim$atom$b
+
+  plotb3(b_factors, sse = pdb_trim, typ = "l", ylab = "Bfactor",
+         main = paste("B-factors for", pdb_id))
+
+  invisible(b_factors)
+}
+
+# Example outputs
+plot_drug_binding("4AKE")  # kinase with drug
+plot_drug_binding("1AKE")  # kinase no drug
+plot_drug_binding("1E4Y")  # kinase with drug
+
+
+```
+
