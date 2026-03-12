@@ -17,7 +17,7 @@ My classwork from [BIMM143](https://bioboot.github.io/bimm143_W26) at UC San Die
 - Class 14 [Project: RNA-Seq mini project](lab14/lab14.qmd)
 - Class 15 [Hands-on with Git and GitHub](lab15)
 - Class 16 [Essential UNIX for bioinformatics](lab16)
-- Class 17 [Analyzing sequencing data in the cloud](lab17/Class%2017%20Downstream%20analysis_class17_Santoso.pdf)
+- Class 17 [Analyzing sequencing data in the cloud](lab17/class17_downstream_analysis_santoso.pdf)
 - Class 18 [Project: Investigating pertussis resurgence mini-project](lab18/lab18(1).qmd)
 - Class 19 [Project: Cancer mutation analysis mini-project](lab19/lab19.pdf)
 
