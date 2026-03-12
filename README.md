@@ -4,8 +4,8 @@ My classwork from [BIMM143](https://bioboot.github.io/bimm143_W26) at UC San Die
 # Index of Material
 *Introductory material*
 
-- Class 04 [Intro to R](lab4/)
-- Class 05 [Data viz with ggplot](lab5/)
+- Class 04 [Intro to R](lab4/class04.pdf)
+- Class 05 [Data viz with ggplot](lab5/class05.qmd)
 - Class 06 [R functions](lab6/)
 - Class 07 [Machine learning for Bioinformatics](lab7/)
 - Class 08 [unsupervised learning mini-project](lab8/)
